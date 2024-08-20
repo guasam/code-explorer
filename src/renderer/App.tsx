@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import basic from './styles/basic.module.css';
 import DialogBox from './components/DialogBox';
+import Fuse from 'fuse.js';
 
 export default function App() {
   const [entries, setEntries] = useState<ProjectEntryWithMeta[]>([]);
@@ -9,7 +10,9 @@ export default function App() {
   const [stateFileError, setStateFileError] = useState('');
   const isInitialized = useRef(false);
   const [filterText, setFilterText] = useState('');
-  const filteredEntries = entries.filter((entry) => entry.folderName.toLowerCase().includes(filterText.toLowerCase()));
+
+  const fuse = new Fuse(entries, { keys: ['folderName'], threshold: 0.3 });
+  const filteredEntries = filterText ? fuse.search(filterText).map((result) => result.item) : entries;
 
   // On mount
   useEffect(() => {
