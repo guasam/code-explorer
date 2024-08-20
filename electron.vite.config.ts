@@ -9,6 +9,11 @@ export default defineConfig({
       alias: {
         '@resources': resolve('resources')
       }
+    },
+    build: {
+      rollupOptions: {
+        external: ['sqlite3']
+      }
     }
   },
   preload: {

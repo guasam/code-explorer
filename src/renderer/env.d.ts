@@ -6,3 +6,20 @@ declare module '*.vue' {
   const component: DefineComponent<{}, {}, any>;
   export default component;
 }
+
+interface ProjectEntry {
+  folderUri: string;
+  fileUri: string;
+  label: string;
+  remoteAuthority: string;
+  workspace: {
+    id: string;
+    configPath?: string;
+  };
+}
+
+interface ProjectEntryWithMeta extends ProjectEntry {
+  isDevContainer?: boolean;
+  isWSL?: boolean;
+  isSSH?: boolean;
+}
