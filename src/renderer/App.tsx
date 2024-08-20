@@ -128,13 +128,16 @@ export default function App() {
       <button onClick={openDialog}>⚙️</button>
       <input type="text" placeholder="Search" value={filterText} onChange={(e) => setFilterText(e.target.value)} />
       {filteredEntries.map((entry, index) => (
-        <div key={index}>
-          <a href="#" onClick={() => openFolderInCode(entry['folderUri'])}>
-            {entry.folderName}
-          </a>
-          {entry['isDevContainer'] ? '- Dev Container' : ''}
-          {entry['isWSL'] ? '- WSL' : ''}
-          {entry['isSSH'] ? '- Remote SSH' : ''}
+        <div className="entry" key={index}>
+          <span onClick={() => openFolderInCode(entry['folderUri'])}>{entry.folderName}</span>
+
+          {entry.isDevContainer || entry.isWSL || entry.isSSH ? (
+            <span className="entry-badge">
+              {entry.isDevContainer ? 'Dev Container' : ''}
+              {entry.isWSL ? 'WSL' : ''}
+              {entry.isSSH ? 'Remote SSH' : ''}
+            </span>
+          ) : null}
         </div>
       ))}
 
