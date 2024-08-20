@@ -6,13 +6,14 @@ import './ipc';
 
 function createWindow(): void {
   const mainWindow = new BrowserWindow({
-    width: 900,
-    height: 670,
+    width: 540,
+    height: 600,
     show: false,
     autoHideMenuBar: true,
     backgroundColor: '#202020',
     title: 'Electron',
     minimizable: false,
+    resizable: false,
     ...(process.platform === 'linux' ? { icon } : {}),
     webPreferences: {
       preload: join(__dirname, '../preload/preload.js'),
