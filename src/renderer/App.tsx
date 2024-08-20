@@ -3,11 +3,13 @@ import basic from './styles/basic.module.css';
 import DialogBox from './components/DialogBox';
 
 export default function App() {
-  const [entries, setEntries] = useState<ProjectEntry[]>([]);
+  const [entries, setEntries] = useState<ProjectEntryWithMeta[]>([]);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [stateFilePath, setStateFilePath] = useState('');
   const [stateFileError, setStateFileError] = useState('');
   const isInitialized = useRef(false);
+  const [filterText, setFilterText] = useState('');
+  const filteredEntries = entries.filter((entry) => entry.folderName.toLowerCase().includes(filterText.toLowerCase()));
 
   // On mount
   useEffect(() => {
@@ -34,6 +36,7 @@ export default function App() {
     console.log(stateFilePath);
     const data = (await window.api.invoke('entries', filePath)) as ProjectEntryWithMeta[];
     data.forEach((entry) => {
+      entry.folderName = getBaseFolderName(entry.folderUri);
       entry.isDevContainer = entry.folderUri.startsWith('vscode-remote://dev-container');
       entry.isWSL = entry.folderUri.startsWith('vscode-remote://wsl');
       entry.isSSH = entry.folderUri.startsWith('vscode-remote://ssh-remote');
@@ -97,7 +100,7 @@ export default function App() {
     closeDialog();
 
     // Set the state file path
-    setStateFilePath(filePath)
+    setStateFilePath(filePath);
   };
 
   const openDialog = () => {
@@ -123,16 +126,19 @@ export default function App() {
         </div>
       </DialogBox>
       <button onClick={openDialog}>⚙️</button>
-      {entries.map((entry, index) => (
+      <input type="text" placeholder="Search" value={filterText} onChange={(e) => setFilterText(e.target.value)} />
+      {filteredEntries.map((entry, index) => (
         <div key={index}>
           <a href="#" onClick={() => openFolderInCode(entry['folderUri'])}>
-            {getBaseFolderName(entry['folderUri'])}
+            {entry.folderName}
           </a>
           {entry['isDevContainer'] ? '- Dev Container' : ''}
           {entry['isWSL'] ? '- WSL' : ''}
           {entry['isSSH'] ? '- Remote SSH' : ''}
         </div>
       ))}
+
+      {filteredEntries.length === 0 && <div>No entries found</div>}
     </div>
   );
 }
