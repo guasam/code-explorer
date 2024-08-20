@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import basic from './styles/basic.module.css';
 import DialogBox from './components/DialogBox';
+import { VariableSizeList as List } from 'react-window';
 import Fuse from 'fuse.js';
 
 export default function App() {
@@ -36,7 +37,6 @@ export default function App() {
 
   const fetchEntries = async (filePath) => {
     // Fetch entries
-    console.log(stateFilePath);
     const data = (await window.api.invoke('entries', filePath)) as ProjectEntryWithMeta[];
     data.forEach((entry) => {
       entry.folderName = getBaseFolderName(entry.folderUri);
@@ -115,6 +115,22 @@ export default function App() {
     setIsDialogOpen(false);
   };
 
+  const EntryRow = ({ index, style }) => {
+    const entry = filteredEntries[index];
+    return (
+      <div style={style} className="entry" key={index}>
+        <span onClick={() => openFolderInCode(entry['folderUri'])}>{entry.folderName}</span>
+        {entry.isDevContainer || entry.isWSL || entry.isSSH ? (
+          <span className="entry-badge">
+            {entry.isDevContainer ? 'Dev Container' : ''}
+            {entry.isWSL ? 'WSL' : ''}
+            {entry.isSSH ? 'Remote SSH' : ''}
+          </span>
+        ) : null}
+      </div>
+    );
+  };
+
   return (
     <div className={basic.app}>
       <DialogBox isOpen={isDialogOpen} onClose={closeDialog} title="Code State File">
@@ -130,19 +146,10 @@ export default function App() {
       </DialogBox>
       <button onClick={openDialog}>⚙️</button>
       <input type="text" placeholder="Search" value={filterText} onChange={(e) => setFilterText(e.target.value)} />
-      {filteredEntries.map((entry, index) => (
-        <div className="entry" key={index}>
-          <span onClick={() => openFolderInCode(entry['folderUri'])}>{entry.folderName}</span>
 
-          {entry.isDevContainer || entry.isWSL || entry.isSSH ? (
-            <span className="entry-badge">
-              {entry.isDevContainer ? 'Dev Container' : ''}
-              {entry.isWSL ? 'WSL' : ''}
-              {entry.isSSH ? 'Remote SSH' : ''}
-            </span>
-          ) : null}
-        </div>
-      ))}
+      <List height={600} width={'100%'} itemCount={filteredEntries.length} itemSize={() => 35}>
+        {EntryRow}
+      </List>
 
       {filteredEntries.length === 0 && <div>No entries found</div>}
     </div>

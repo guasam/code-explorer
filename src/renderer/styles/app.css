@@ -82,7 +82,7 @@ h6 {
   background: #00000017;
   border-bottom: 1px solid #3131318a;
   display: flex;
-  margin: 2px;
+  margin: 2px 0;
   justify-content: space-between;
   align-items: center;
   font-size: 15px;
@@ -90,14 +90,14 @@ h6 {
 }
 
 .entry:hover {
-  color: #3681bb;
+  color: #0090ff;
   background: #0000002e;
 }
 
 .entry-badge {
-  background: #000000c2;
+  background: #353535c2;
   border-radius: 5px;
-  font-size: 11px;
+  font-size: 12px;
   padding: 2px 6px;
   color: #ffffffa9;
 }
