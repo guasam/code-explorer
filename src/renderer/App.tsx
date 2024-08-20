@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from 'react';
-import basic from './styles/basic.module.css';
 import DialogBox from './components/DialogBox';
 import { VariableSizeList as List } from 'react-window';
 import Fuse from 'fuse.js';
@@ -137,7 +136,7 @@ export default function App() {
   };
 
   return (
-    <div className={basic.app}>
+    <div className="app">
       <input className="search-input" type="text" placeholder="Search" value={filterText} onChange={(e) => setFilterText(e.target.value)} />
       <List height={510} width={'100%'} itemCount={filteredEntries.length} itemSize={() => 35}>
         {EntryRow}

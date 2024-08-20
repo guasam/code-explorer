@@ -52,6 +52,13 @@ h6 {
   background: #888;
 }
 
+.app {
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  max-height: 100vh;
+}
+
 /* Dark theme button styles */
 .button {
   background-color: #444; /* Dark background */
