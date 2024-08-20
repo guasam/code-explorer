@@ -1,9 +1,13 @@
 import { useEffect, useRef, useState } from 'react';
 import basic from './styles/basic.module.css';
+import DialogBox from './components/DialogBox';
 
 export default function App() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [entries, setEntries] = useState<ProjectEntry[]>([]);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [stateFilePath, setStateFilePath] = useState('');
+  const [stateFileError, setStateFileError] = useState('');
 
   // On mount
   useEffect(() => {
@@ -47,10 +51,48 @@ export default function App() {
     window.api.invoke('open-vscode', folderUri);
   };
 
+  const applyStateFile = async () => {
+    // Clear previous error
+    setStateFileError('');
+
+    // no file path provided
+    if (!stateFilePath) {
+      setStateFileError('Please provide a valid file path');
+      return;
+    }
+
+    // Sanitize whitespace and quotes
+    const filePath = stateFilePath.trim().replace(/^['"]|['"]$/g, '');
+
+    // Verify state file via main ipc
+    const result = await window.api.invoke('verify-state-file', filePath);
+
+    // if result is boolean, it means the file path is valid
+    const isValid = typeof result === 'boolean' ? result : false;
+
+    if (!isValid) {
+      setStateFileError(result);
+      return;
+    }
+
+    // Persist state file path in localStorage
+    localStorage.setItem('stateFilePath', filePath);
+  };
+
   return (
     <div className={basic.app}>
-      <input ref={fileInputRef} type="file" onChange={handleFileSelect} style={{ display: 'none' }} />
-      <button onClick={() => fileInputRef.current?.click()}>⚙️</button>
+      <DialogBox isOpen={isDialogOpen} onClose={() => setIsDialogOpen(false)} title="Code State File">
+        <div>Enter vscode state file (state.vscdb) path:</div>
+        <br />
+        <textarea spellCheck={false} value={stateFilePath} onChange={(e) => setStateFilePath(e.target.value)}></textarea>
+        {stateFileError && <div style={{ color: 'red' }}>{stateFileError}</div>}
+        <div style={{ textAlign: 'center', marginTop: '1rem' }}>
+          <button className="button" onClick={applyStateFile}>
+            Apply
+          </button>
+        </div>
+      </DialogBox>
+      <button onClick={() => setIsDialogOpen(!isDialogOpen)}>⚙️</button>
       {entries.map((entry, index) => (
         <div key={index}>
           <a href="#" onClick={() => openFolderInCode(entry['folderUri'])}>

@@ -1,0 +1,54 @@
+.dialog-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8); /* Darker overlay */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.dialog-box {
+  background: #333; /* Dark background */
+  color: #fff; /* Light text color */
+  padding: 20px;
+  border-radius: 8px;
+  width: 400px;
+  max-width: 90%;
+}
+
+.dialog-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.close-button {
+  background: none;
+  border: none;
+  color: #fff; /* Light color for the close button */
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+.dialog-content {
+  margin-top: 1rem;
+}
+
+.dialog-content textarea {
+  width: 100%;
+  resize: none;
+  background-color: #00000017;
+  padding: 0.5rem;
+  outline: none;
+  color: #ffffffc7;
+  font-size: 14px;
+  font-family: Consolas, monospace;
+  border-color: rgba(79, 79, 79, 0.731);
+}
+
+.dialog-content textarea:focus {
+  background-color: #00000036;
+}

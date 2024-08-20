@@ -7,6 +7,7 @@ ipcMain.handle('entries', async () => {
   const dbpath = 'C:\\Users\\Gary\\Desktop\\state.vscdb';
   const db = await open({ filename: dbpath, driver: sqlite3.Database, mode: sqlite3.OPEN_READONLY });
   const rows = await db.get("SELECT value FROM ItemTable WHERE key='history.recentlyOpenedPathsList'");
+  await db.close();
 
   if (rows) {
     const result = JSON.parse(rows.value) as { entries: any[] } | null;
@@ -30,4 +31,23 @@ ipcMain.handle('open-vscode', async (_event, folderUri: string) => {
     shell: false,
     windowsHide: true
   });
+});
+
+// Define ipc main to verify the state file path
+ipcMain.handle('verify-state-file', async (_event, filePath: string) => {
+  try {
+    const db = await open({ filename: filePath, driver: sqlite3.Database, mode: sqlite3.OPEN_READONLY });
+    const rows = await db.get("SELECT value FROM ItemTable WHERE key='history.recentlyOpenedPathsList'");
+    await db.close();
+
+    if (rows) {
+      const result = JSON.parse(rows.value) as { entries: any[] } | null;
+      return result?.entries && Array.isArray(result.entries);
+    }
+  } catch (err: any) {
+    console.error(err);
+    return err.message;
+  }
+
+  return false;
 });
