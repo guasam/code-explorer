@@ -3,19 +3,36 @@ import basic from './styles/basic.module.css';
 import DialogBox from './components/DialogBox';
 
 export default function App() {
-  const fileInputRef = useRef<HTMLInputElement>(null);
   const [entries, setEntries] = useState<ProjectEntry[]>([]);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [stateFilePath, setStateFilePath] = useState('');
   const [stateFileError, setStateFileError] = useState('');
+  const isInitialized = useRef(false);
 
   // On mount
   useEffect(() => {
-    initialize();
+    if (!isInitialized.current) {
+      initialize();
+      isInitialized.current = true;
+    }
   }, []);
 
   const initialize = async () => {
-    const data = (await window.api.invoke('entries', null)) as ProjectEntryWithMeta[];
+    // Sanitize whitespace and quotes
+    let filePath = localStorage.getItem('stateFilePath');
+    filePath = filePath?.trim().replace(/^['"]|['"]$/g, '') || '';
+
+    // Get state file path from localStorage
+    setStateFilePath(filePath);
+
+    // Fetch project entries
+    fetchEntries(filePath);
+  };
+
+  const fetchEntries = async (filePath) => {
+    // Fetch entries
+    console.log(stateFilePath);
+    const data = (await window.api.invoke('entries', filePath)) as ProjectEntryWithMeta[];
     data.forEach((entry) => {
       entry.isDevContainer = entry.folderUri.startsWith('vscode-remote://dev-container');
       entry.isWSL = entry.folderUri.startsWith('vscode-remote://wsl');
@@ -26,14 +43,6 @@ export default function App() {
       setEntries(data);
     }
   };
-
-  const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      console.log(file);
-    }
-  };
-
   const getBaseFolderName = (fileUri: string): string => {
     try {
       const url = new URL(fileUri);
@@ -77,11 +86,32 @@ export default function App() {
 
     // Persist state file path in localStorage
     localStorage.setItem('stateFilePath', filePath);
+
+    // Log the valid state file path
+    console.log('State file validated & applied : ', filePath);
+
+    // Refresh entries
+    fetchEntries(filePath);
+
+    // Close the dialog
+    closeDialog();
+
+    // Set the state file path
+    setStateFilePath(filePath)
+  };
+
+  const openDialog = () => {
+    setIsDialogOpen(true);
+  };
+
+  const closeDialog = () => {
+    setStateFileError('');
+    setIsDialogOpen(false);
   };
 
   return (
     <div className={basic.app}>
-      <DialogBox isOpen={isDialogOpen} onClose={() => setIsDialogOpen(false)} title="Code State File">
+      <DialogBox isOpen={isDialogOpen} onClose={closeDialog} title="Code State File">
         <div>Enter vscode state file (state.vscdb) path:</div>
         <br />
         <textarea spellCheck={false} value={stateFilePath} onChange={(e) => setStateFilePath(e.target.value)}></textarea>
@@ -92,7 +122,7 @@ export default function App() {
           </button>
         </div>
       </DialogBox>
-      <button onClick={() => setIsDialogOpen(!isDialogOpen)}>⚙️</button>
+      <button onClick={openDialog}>⚙️</button>
       {entries.map((entry, index) => (
         <div key={index}>
           <a href="#" onClick={() => openFolderInCode(entry['folderUri'])}>
