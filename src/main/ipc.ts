@@ -1,4 +1,4 @@
-import { ipcMain } from 'electron';
+import { ipcMain, shell } from 'electron';
 import { open } from 'sqlite';
 import sqlite3 from 'sqlite3';
 import { spawn } from 'child_process';
@@ -54,4 +54,13 @@ ipcMain.handle('verify-state-file', async (_event, filePath: string) => {
   }
 
   return false;
+});
+
+// Open github url in default browser
+ipcMain.handle('open-url', async (_, url) => {
+  try {
+    await shell.openExternal(url);
+  } catch (err: any) {
+    console.error(err);
+  }
 });
