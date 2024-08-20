@@ -117,3 +117,13 @@ h6 {
   font-size: 13px;
   color: #9a9a9a;
 }
+
+.search-input {
+  padding: 6px 10px;
+  background: #171717;
+  border: 0;
+  margin: 10px;
+  border-radius: 4px;
+  outline: none;
+  color: #ffffff9f;
+}

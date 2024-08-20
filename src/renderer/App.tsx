@@ -138,7 +138,7 @@ export default function App() {
 
   return (
     <div className={basic.app}>
-      <input type="text" placeholder="Search" value={filterText} onChange={(e) => setFilterText(e.target.value)} />
+      <input className="search-input" type="text" placeholder="Search" value={filterText} onChange={(e) => setFilterText(e.target.value)} />
       <List height={510} width={'100%'} itemCount={filteredEntries.length} itemSize={() => 35}>
         {EntryRow}
       </List>
