@@ -45,7 +45,7 @@
 .dialog-content textarea {
   width: 100%;
   resize: none;
-  background-color: #00000017;
+  background-color: #00000036;
   padding: 0.5rem;
   outline: none;
   color: #ffffffc7;
@@ -55,5 +55,5 @@
 }
 
 .dialog-content textarea:focus {
-  background-color: #00000036;
+  background-color: #00000069;
 }
