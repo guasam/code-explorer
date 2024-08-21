@@ -3,7 +3,7 @@
 Code Explorer is an application that helps you easily explore your recently opened Visual Studio Code projects. It provides a user-friendly interface to quickly access and search your projects, making laziest developers life a bit more relaxing.
 
 <center>
-   <img src="resources/build/app.png" />
+<img src="resources/build/app.png" />
 </center>
 
 <br />
