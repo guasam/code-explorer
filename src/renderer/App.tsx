@@ -23,6 +23,9 @@ export default function App() {
     }
   }, []);
 
+  /**
+   * Initializes the app
+   */
   const initialize = async () => {
     // Sanitize whitespace and quotes
     let filePath = localStorage.getItem('stateFilePath');
@@ -35,6 +38,9 @@ export default function App() {
     fetchEntries(filePath);
   };
 
+  /**
+   * Fetches entries from the state file dataabse using main ipc
+   */
   const fetchEntries = async (filePath) => {
     // Fetch entries
     const data = (await window.api.invoke('entries', filePath)) as ProjectEntryWithMeta[];
@@ -49,6 +55,10 @@ export default function App() {
       setEntries(data);
     }
   };
+
+  /**
+   * Extracts the base folder name from the file uri
+   */
   const getBaseFolderName = (fileUri: string): string => {
     try {
       const url = new URL(fileUri);
@@ -62,10 +72,16 @@ export default function App() {
     return '';
   };
 
+  /**
+   * Opens the folder in vscode
+   */
   const openFolderInCode = (folderUri: string) => {
     window.api.invoke('open-vscode', folderUri);
   };
 
+  /**
+   * Applies the state file path & persists it in localStorage
+   */
   const applyStateFile = async () => {
     // Clear previous error
     setStateFileError('');
