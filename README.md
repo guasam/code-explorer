@@ -44,6 +44,12 @@ To install and run VSCode Projects Explorer locally, follow these steps:
 
 Once the application is running, you can:
 
+- **State File Path**: Set the state file path from your vscode installation directory.
+
+```
+"C:\Users\{Username}\AppData\Roaming\Code\User\globalStorage\state.vscdb"
+```
+
 - **View Recent Projects**: See a list of your recently opened Visual Studio Code projects.
 - **Open Projects**: Click on a project name to open it in Visual Studio Code.
 
