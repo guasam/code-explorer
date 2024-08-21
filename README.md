@@ -35,7 +35,7 @@ To install and run VSCode Projects Explorer locally, follow these steps:
 4. Start the application:
 
    ```sh
-   npm dev
+   npm run dev
    ```
 
 <br />
