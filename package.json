@@ -22,7 +22,8 @@
   },
   "dependencies": {
     "@electron-toolkit/preload": "^3.0.1",
-    "@electron-toolkit/utils": "^3.0.0"
+    "@electron-toolkit/utils": "^3.0.0",
+    "sqlite3": "^5.1.7"
   },
   "devDependencies": {
     "@electron-toolkit/eslint-config": "^1.0.2",
@@ -48,7 +49,6 @@
     "react-dom": "^18.3.1",
     "react-window": "^1.8.10",
     "sqlite": "^5.1.1",
-    "sqlite3": "^5.1.7",
     "typescript": "^5.5.4",
     "vite": "^5.4.1"
   }
