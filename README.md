@@ -55,6 +55,16 @@ Once the application is running, you can:
 
 <br />
 
+## Production / Distribution
+
+To build the application for production usage on windows platform, use this commnad:
+
+```
+npm run build:win
+```
+
+<br />
+
 ## For Your Information
 
 This application is currently supported for the Windows platform. If you'd like to contribute to this project for other platforms (mac, linux, etc.), all pull requests are welcome.
