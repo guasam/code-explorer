@@ -37,7 +37,7 @@ ipcMain.handle('open-vscode', async (_event, folderUri: string) => {
   });
 });
 
-// Define ipc main to verify the state file path
+// Verify the state file
 ipcMain.handle('verify-state-file', async (_event, filePath: string) => {
   try {
     const db = await open({ filename: filePath, driver: sqlite3.Database, mode: sqlite3.OPEN_READONLY });
@@ -56,7 +56,7 @@ ipcMain.handle('verify-state-file', async (_event, filePath: string) => {
   return false;
 });
 
-// Open github url in default browser
+// Open url in default browser
 ipcMain.handle('open-url', async (_, url) => {
   try {
     await shell.openExternal(url);
