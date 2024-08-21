@@ -138,11 +138,18 @@ export default function App() {
   return (
     <div className="app">
       <input className="search-input" type="text" placeholder="Search" value={filterText} onChange={(e) => setFilterText(e.target.value)} />
-      <List height={510} width={'100%'} itemCount={filteredEntries.length} itemSize={() => 35}>
-        {EntryRow}
-      </List>
+      {filteredEntries.length > 0 && (
+        <List height={486} width={'100%'} itemCount={filteredEntries.length} itemSize={() => 35}>
+          {EntryRow}
+        </List>
+      )}
 
-      {filteredEntries.length === 0 && <div>No entries found</div>}
+      {filteredEntries.length === 0 && (
+        <div style={{ padding: '1rem', textAlign: 'center' }}>
+          <div>No entries found</div>
+          {!stateFilePath && <div>Click + for configuration</div>}
+        </div>
+      )}
 
       <DialogBox isOpen={isDialogOpen} onClose={closeDialog} title="Code State File">
         <div>Enter vscode state file (state.vscdb) path:</div>
