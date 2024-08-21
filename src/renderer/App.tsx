@@ -117,9 +117,10 @@ export default function App() {
 
   const EntryRow = ({ index, style }) => {
     const entry = filteredEntries[index];
+    const decodedPath = decodeURIComponent(entry.folderUri);
     return (
-      <div style={style} className="entry" key={index}>
-        <span onClick={() => openFolderInCode(entry['folderUri'])}>{entry.folderName}</span>
+      <div style={style} className="entry" key={index} title={decodedPath}>
+        <span onClick={() => openFolderInCode(entry.folderUri)}>{entry.folderName}</span>
         {entry.isDevContainer || entry.isWSL || entry.isSSH ? (
           <span className="entry-badge">
             {entry.isDevContainer ? 'Dev Container' : ''}
