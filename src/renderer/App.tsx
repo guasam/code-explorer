@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import DialogBox from './components/DialogBox';
 import { VariableSizeList as List } from 'react-window';
 import Fuse from 'fuse.js';
-import { GitHubIcon, PlusIcon } from './components/Icons';
+import { FolderIcon, GitHubIcon, PlusIcon } from './components/Icons';
 
 export default function App() {
   const [entries, setEntries] = useState<ProjectEntryWithMeta[]>([]);
@@ -120,7 +120,10 @@ export default function App() {
     const decodedPath = decodeURIComponent(entry.folderUri);
     return (
       <div style={style} className="entry" key={index} title={decodedPath}>
-        <span onClick={() => openFolderInCode(entry.folderUri)}>{entry.folderName}</span>
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+          <FolderIcon />
+          <span onClick={() => openFolderInCode(entry.folderUri)}>{entry.folderName}</span>
+        </div>
         {entry.isDevContainer || entry.isWSL || entry.isSSH ? (
           <span className="entry-badge">
             {entry.isDevContainer ? 'Dev Container' : ''}

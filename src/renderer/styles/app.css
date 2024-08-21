@@ -101,6 +101,10 @@ h6 {
   background: #0000002e;
 }
 
+.entry:hover .folder-icon {
+  fill: #3d9dd5a4;
+}
+
 .entry-badge {
   background: #353535c2;
   border-radius: 5px;
@@ -133,4 +137,9 @@ h6 {
   border-radius: 4px;
   outline: none;
   color: #ffffff9f;
+}
+
+.folder-icon {
+  fill: #ffffff42;
+  margin-right: 10px;
 }
