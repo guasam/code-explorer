@@ -1,7 +1,7 @@
-import { useEffect, useRef, useState } from 'react';
-import DialogBox from './components/DialogBox';
-import { VariableSizeList as List } from 'react-window';
 import Fuse from 'fuse.js';
+import { useEffect, useRef, useState } from 'react';
+import { VariableSizeList as List } from 'react-window';
+import DialogBox from './components/DialogBox';
 import { FolderIcon, GitHubIcon, PlusIcon } from './components/Icons';
 
 export default function App() {
@@ -41,7 +41,7 @@ export default function App() {
   /**
    * Fetches entries from the state file dataabse using main ipc
    */
-  const fetchEntries = async (filePath) => {
+  const fetchEntries = async (filePath: string) => {
     // Fetch entries
     const data = (await window.api.invoke('entries', filePath)) as ProjectEntryWithMeta[];
     data.forEach((entry) => {
@@ -49,6 +49,23 @@ export default function App() {
       entry.isDevContainer = entry.folderUri.startsWith('vscode-remote://dev-container');
       entry.isWSL = entry.folderUri.startsWith('vscode-remote://wsl');
       entry.isSSH = entry.folderUri.startsWith('vscode-remote://ssh-remote');
+      entry.folderCleanUri = decodeURIComponent(entry.folderUri);
+
+      // Clean wsl folder uri path and add wsl env name
+      if (entry.isWSL) {
+        const match = entry.folderCleanUri.match(/wsl\+([^\/]+)/);
+        if (match) {
+          const wslName = match[1] as string;
+          entry.envName = wslName.charAt(0).toUpperCase() + wslName.slice(1);
+        }
+
+        entry.folderCleanUri = entry.folderCleanUri.replace('vscode-remote://wsl+', '');
+      }
+
+      // Clean file protocol uri
+      if (entry.folderCleanUri.startsWith('file:///')) {
+        entry.folderCleanUri = entry.folderCleanUri.replace('file:///', '');
+      }
     });
 
     if (data) {
@@ -133,9 +150,8 @@ export default function App() {
 
   const EntryRow = ({ index, style }) => {
     const entry = filteredEntries[index];
-    const decodedPath = decodeURIComponent(entry.folderUri);
     return (
-      <div style={style} className="entry" key={index} title={decodedPath}>
+      <div style={style} className="entry" key={index} title={entry.folderCleanUri}>
         <div style={{ display: 'flex', alignItems: 'center' }}>
           <FolderIcon />
           <span onClick={() => openFolderInCode(entry.folderUri)}>{entry.folderName}</span>
@@ -143,7 +159,7 @@ export default function App() {
         {entry.isDevContainer || entry.isWSL || entry.isSSH ? (
           <span className="entry-badge">
             {entry.isDevContainer ? 'Dev Container' : ''}
-            {entry.isWSL ? 'WSL' : ''}
+            {entry.isWSL ? 'WSL' + (entry.envName ? `: ${entry.envName}` : '') : ''}
             {entry.isSSH ? 'Remote SSH' : ''}
           </span>
         ) : null}

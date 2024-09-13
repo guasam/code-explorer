@@ -23,4 +23,6 @@ interface ProjectEntryWithMeta extends ProjectEntry {
   isDevContainer?: boolean;
   isWSL?: boolean;
   isSSH?: boolean;
+  folderCleanUri: string;
+  envName?: string;
 }
